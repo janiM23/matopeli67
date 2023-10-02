@@ -1,4 +1,5 @@
 # to run 'pip install PySide6' is required
+
 import sys
 import random
 from PySide6.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QMenu 
@@ -20,11 +21,18 @@ class SnakeGame(QGraphicsView):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_game)
-        
-        self.start_game()
+
+        # starting game by button
+        self.game_started = False
+        self.init_screen()
 
     def keyPressEvent(self, event):
         key = event.key()
+        if not self.game_started:
+            if key == event.key():
+                self.game_started = True
+                self.scene().clear()
+                self.start_game()
 
         if key in (Qt.Key_Left, Qt.Key_Right, Qt.Key_Up, Qt.Key_Down):
             # Only update direction if the new direction is not opposite to the current direction
@@ -49,6 +57,13 @@ class SnakeGame(QGraphicsView):
         elif self.direction == Qt.Key_Down:
             new_head = (head_x, head_y + 1)
 
+        #pdate_game metodiin suuntien tarkistuksen jälkeen
+        # board limits
+
+        if new_head in self.snake or not (0 <= new_head[0] < GRID_WIDTH) or not (0 <= new_head[1] < GRID_HEIGHT):
+            self.timer.stop()
+            return
+
         self.snake.insert(0, new_head)
   
         self.snake.pop()    
@@ -69,6 +84,7 @@ class SnakeGame(QGraphicsView):
 
         self.timer.start(300)
 
+<<<<<<< HEAD
     # add food
     def spawn_food(self):
         while True:
@@ -79,6 +95,14 @@ class SnakeGame(QGraphicsView):
         
             fx, fy = self.food
             self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
+=======
+    # Aloitusruudun metodi
+    def init_screen(self):
+        start_text = self.scene().addText("Press any key to start", QFont("Arial", 18))
+        text_width = start_text.boundingRect().width()
+        text_x = (self.width() - text_width) / 5
+        start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
+>>>>>>> 6a6c5da64c8425edce58a2a5b0f8ee53e1afcd8e
 
 def main():
     app = QApplication(sys.argv)
