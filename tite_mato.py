@@ -66,7 +66,11 @@ class SnakeGame(QGraphicsView):
 
         self.snake.insert(0, new_head)
   
-        self.snake.pop()    
+        if new_head == self.food:
+            self.food = self.spawn_food()
+            self.score += 1
+        else:
+            self.snake.pop()   
 
         self.print_game()
 
@@ -77,14 +81,27 @@ class SnakeGame(QGraphicsView):
         for segment in self.snake:
             x, y = segment
             self.scene().addRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.black))
+            self.scene().addText(f"Score: {self.score}", QFont("Arial", 12)) 
 
     def start_game(self):
         self.direction = Qt.Key_Right
         self.snake = [(5, 5), (5, 6), (5, 7)]
 
         self.timer.start(300)
+        self.score = 0
+        # for levels
+        self.level_limit = 5
+        self.timer_delay = 300
 
-<<<<<<< HEAD
+        self.timer.start(self.timer_delay)
+
+        #Lisää pisteiden kasvatuksen jälkeen saman if-lauseen sisälle seuraavat rivit:
+        # for levels
+        if self.score == self.level_limit:
+            self.level_limit += 5
+            self.timer_delay -= 50
+            self.timer.setInterval(self.timer_delay)
+
     # add food
     def spawn_food(self):
         while True:
@@ -95,14 +112,20 @@ class SnakeGame(QGraphicsView):
         
             fx, fy = self.food
             self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
-=======
+    
     # Aloitusruudun metodi
     def init_screen(self):
         start_text = self.scene().addText("Press any key to start", QFont("Arial", 18))
         text_width = start_text.boundingRect().width()
         text_x = (self.width() - text_width) / 5
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
->>>>>>> 6a6c5da64c8425edce58a2a5b0f8ee53e1afcd8e
+
+    # Game over text
+    def  game_over(self):
+        game_over_text = self.scene().addText("Game Over", QFont("Arial", 24))
+        text_width = game_over_text.boundingRect().width()
+        text_x = (self.width() - text_width) / 2
+        game_over_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
 
 def main():
     app = QApplication(sys.argv)
