@@ -95,8 +95,8 @@ class SnakeGame(QGraphicsView):
             fx, fy = self.food
             self.scene().addRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.black))
             self.scene().addText(f"Score: {self.score}", QFont("Arial", 12)) 
-            
             self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
+
 
     def start_game(self):
         self.direction = Qt.Key_Right
@@ -106,12 +106,20 @@ class SnakeGame(QGraphicsView):
         self.timer.start(300)
         self.score = 0
 
-    # Aloitusruudun metodi
-    def init_screen(self):
-        start_text = self.scene().addText("Press any key to start", QFont("Arial", 18))
-        text_width = start_text.boundingRect().width()
-        text_x = (self.width() - text_width) / 5
-        start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
+        # for levels
+        self.level_limit = 5
+        self.timer_delay = 300
+
+        self.timer.start(self.timer_delay)
+
+        #Lisää pisteiden kasvatuksen jälkeen saman if-lauseen sisälle seuraavat rivit:
+        # for levels
+        if self.score == self.level_limit:
+            self.level_limit += 5
+            self.timer_delay -= 50
+            self.timer.setInterval(self.timer_delay)
+
+    # add food
 
 
     # Aloitusruudun metodi
@@ -120,16 +128,15 @@ class SnakeGame(QGraphicsView):
         text_width = start_text.boundingRect().width()
         text_x = (self.width() - text_width) / 5
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
-
-    def spawn_food(self):
-        while True:
-            x = random.randint(0, GRID_WIDTH - 1)
-            y = random.randint(0, GRID_HEIGHT - 1)
-            if (x, y) not in self.snake:
-                return x, y
         
-            fx, fy = self.food
-            self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
+
+    # Game over text
+    def  game_over(self):
+        game_over_text = self.scene().addText("Game Over", QFont("Arial", 24))
+        text_width = game_over_text.boundingRect().width()
+        text_x = (self.width() - text_width) / 2
+        game_over_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
+
 
 def main():
     app = QApplication(sys.argv)
