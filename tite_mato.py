@@ -114,8 +114,6 @@ class SnakeGame(QGraphicsView):
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
 
 
-
-
     # Aloitusruudun metodi
     def init_screen(self):
         start_text = self.scene().addText("Press any key to start", QFont("Arial", 18))
@@ -123,6 +121,15 @@ class SnakeGame(QGraphicsView):
         text_x = (self.width() - text_width) / 5
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
 
+    def spawn_food(self):
+        while True:
+            x = random.randint(0, GRID_WIDTH - 1)
+            y = random.randint(0, GRID_HEIGHT - 1)
+            if (x, y) not in self.snake:
+                return x, y
+        
+            fx, fy = self.food
+            self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
 
 def main():
     app = QApplication(sys.argv)
