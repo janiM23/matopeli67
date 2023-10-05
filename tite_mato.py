@@ -2,7 +2,7 @@
 
 import sys
 import random
-from PySide6.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QMenu
+from PySide6.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QMenu 
 from PySide6.QtGui import QPainter, QPen, QBrush, QFont
 from PySide6.QtCore import Qt, QTimer
 
@@ -74,6 +74,7 @@ class SnakeGame(QGraphicsView):
 
         self.print_game()
 
+
     def print_game(self):
         self.scene().clear()
 
@@ -95,6 +96,26 @@ class SnakeGame(QGraphicsView):
         text_width = start_text.boundingRect().width()
         text_x = (self.width() - text_width) / 5
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
+
+<<<<<<< HEAD
+    # add food
+    def spawn_food(self):
+        while True:
+            x = random.randint(0, GRID_WIDTH - 1)
+            y = random.randint(0, GRID_HEIGHT - 1)
+            if (x, y) not in self.snake:
+                return x, y
+        
+            fx, fy = self.food
+            self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
+=======
+    # Aloitusruudun metodi
+    def init_screen(self):
+        start_text = self.scene().addText("Press any key to start", QFont("Arial", 18))
+        text_width = start_text.boundingRect().width()
+        text_x = (self.width() - text_width) / 5
+        start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
+>>>>>>> 6a6c5da64c8425edce58a2a5b0f8ee53e1afcd8e
 
 def main():
     app = QApplication(sys.argv)
