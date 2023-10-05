@@ -12,6 +12,7 @@ GRID_WIDTH = 20
 GRID_HEIGHT = 15
 
 class SnakeGame(QGraphicsView):
+
     def __init__(self):
         super().__init__()
 
@@ -44,6 +45,16 @@ class SnakeGame(QGraphicsView):
                 self.direction = key
             elif key == Qt.Key_Down and self.direction != Qt.Key_Up:
                 self.direction = key
+
+        # add food
+    def spawn_food(self):
+        while True:
+            fx = random.randint(0, GRID_WIDTH - 1)
+            fy = random.randint(0, GRID_HEIGHT - 1)
+            if (fx, fy) not in self.snake:
+                return fx, fy
+        
+            
     
     def update_game(self):
         head_x, head_y = self.snake[0]
@@ -65,6 +76,7 @@ class SnakeGame(QGraphicsView):
             return
 
         self.snake.insert(0, new_head)
+        
   
         if new_head == self.food:
             self.food = self.spawn_food()
@@ -80,12 +92,16 @@ class SnakeGame(QGraphicsView):
 
         for segment in self.snake:
             x, y = segment
+            fx, fy = self.food
             self.scene().addRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.black))
             self.scene().addText(f"Score: {self.score}", QFont("Arial", 12)) 
+            
+            self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
 
     def start_game(self):
         self.direction = Qt.Key_Right
         self.snake = [(5, 5), (5, 6), (5, 7)]
+        self.food = self.spawn_food()
 
         self.timer.start(300)
         self.score = 0
@@ -97,13 +113,14 @@ class SnakeGame(QGraphicsView):
         text_x = (self.width() - text_width) / 5
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
 
+
     # Aloitusruudun metodi
     def init_screen(self):
         start_text = self.scene().addText("Press any key to start", QFont("Arial", 18))
         text_width = start_text.boundingRect().width()
         text_x = (self.width() - text_width) / 5
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
-        
+
     def spawn_food(self):
         while True:
             x = random.randint(0, GRID_WIDTH - 1)
@@ -113,6 +130,7 @@ class SnakeGame(QGraphicsView):
         
             fx, fy = self.food
             self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
+
 def main():
     app = QApplication(sys.argv)
     game = SnakeGame()
