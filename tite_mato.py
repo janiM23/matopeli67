@@ -72,6 +72,7 @@ class SnakeGame(QGraphicsView):
         # board limits
 
         if new_head in self.snake or not (0 <= new_head[0] < GRID_WIDTH) or not (0 <= new_head[1] < GRID_HEIGHT):
+            self.game_over()
             self.timer.stop()
             return
 
